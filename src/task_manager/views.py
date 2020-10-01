@@ -11,7 +11,7 @@ from .utils import parse_args
 
 app = create_app()
 
-
+# TODO: NEED ON ALWAYS RETURN JSON
 @app.route("/create_user", methods=["POST"])
 def main_page():
 
@@ -60,14 +60,28 @@ def create_task():
         return result
 
 
+@app.route("/check_tasks", methods=["GET"])
+def check_tasks():
+
+    data = parse_args(request.data)
+
+    user_token = data["authtoken"]
+
+    try:
+        status_filter = data["status_filter"]
+    except KeyError:
+        status_filter = None
+
+    hand = work_db()
+    result = hand.check_task_status(user_token, status_filter)
+
+    return str(result)
+
+
 # @app.route("/change_task_status", methods=['POST'])
 # def change_task_status():
 #     pass
 
-
-# @app.route("/check_status", methods=["GET"])
-# def check_status():
-#     pass
 
 # @app.route("/check_history", methods=["GET"])
 # def check_history():

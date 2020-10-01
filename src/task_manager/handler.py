@@ -2,7 +2,7 @@ import psycopg2
 
 from loguru import logger
 
-from .utils import generate_token, give_args, transformation_datetime
+from .utils import generate_token, give_args
 
 
 class work_db(object):
@@ -94,6 +94,37 @@ class work_db(object):
         except TypeError as ex:
             logger.error(ex)
             return str(ex)
+
+    def check_task_status(self, user_token: str, status_filter: str):
+
+        self.cursor.execute(
+            f"""SELECT id FROM {self.table_name_user} WHERE authtoken = %(user_token)s;""",
+            {"user_token": user_token},
+        )
+        user_id = self.cursor.fetchall()[0][0]
+
+        if status_filter == None:
+            self.cursor.execute(
+                f"""SELECT name, description, create_datetime, status, planned_completed 
+                    FROM {self.table_name_task} 
+                    WHERE user_id = {user_id}"""
+            )
+            user_tasks = self.cursor.fetchall()
+            print(user_tasks)
+            return user_tasks
+
+        else:
+            self.cursor.execute(
+                f"""SELECT name, description, create_datetime, status, planned_completed 
+                    FROM {self.table_name_task} 
+                    WHERE user_id = {user_id} AND status = %(status_filter)s;""",
+                {"status_filter": status_filter},
+            )
+            user_tasks = self.cursor.fetchall()
+            print(user_tasks)
+            return user_tasks
+
+        return
 
     def _disconnect(self):
         self.connection.close()

@@ -7,9 +7,14 @@ authors = ["smapl <a.mustafin00@mail.ru>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 flask = "^1.1.2"
+psycopg2-binary = "^2.8.4"
+loguru = "^0.5.3"
+requests = "^2.24.0"
+
 
 [tool.poetry.dev-dependencies]
 black = {version = "^19.10b0", allow-prereleases = true}
+pylint = "^2.6.0"
 
 
 [build-system]

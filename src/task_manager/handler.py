@@ -25,9 +25,11 @@ class work_db(object):
         try:
 
             self.cursor.execute(
-                f"""insert into {self.table_name_user} 
-                                    (login, password, authtoken) 
-                                    values (%(login)s, %(password)s, '{token}');""",
+                f"""
+                    INSERT INTO {self.table_name_user} 
+                    (login, password, authtoken) 
+                    VALUES (%(login)s, %(password)s, '{token}');
+                """,
                 {"login": login, "password": password},
             )
 
@@ -62,7 +64,10 @@ class work_db(object):
         try:
 
             self.cursor.execute(
-                f"""SELECT id FROM {self.table_name_user} WHERE authtoken = %(user_token)s;""",
+                f"""
+                    SELECT id FROM {self.table_name_user} 
+                    WHERE authtoken = %(user_token)s;
+                """,
                 {"user_token": user_token},
             )
             user_id = self.cursor.fetchall()[0][0]
@@ -98,16 +103,21 @@ class work_db(object):
     def check_task_status(self, user_token: str, status_filter: str):
 
         self.cursor.execute(
-            f"""SELECT id FROM {self.table_name_user} WHERE authtoken = %(user_token)s;""",
+            f"""
+                SELECT id FROM {self.table_name_user} 
+                WHERE authtoken = %(user_token)s;
+            """,
             {"user_token": user_token},
         )
         user_id = self.cursor.fetchall()[0][0]
 
         if status_filter == None:
             self.cursor.execute(
-                f"""SELECT name, description, create_datetime, status, planned_completed 
+                f"""
+                    SELECT name, description, create_datetime, status, planned_completed 
                     FROM {self.table_name_task} 
-                    WHERE user_id = {user_id}"""
+                    WHERE user_id = {user_id}
+                """
             )
             user_tasks = self.cursor.fetchall()
             print(user_tasks)
@@ -115,9 +125,11 @@ class work_db(object):
 
         else:
             self.cursor.execute(
-                f"""SELECT name, description, create_datetime, status, planned_completed 
+                f"""
+                    SELECT name, description, create_datetime, status, planned_completed 
                     FROM {self.table_name_task} 
-                    WHERE user_id = {user_id} AND status = %(status_filter)s;""",
+                    WHERE user_id = {user_id} AND status = %(status_filter)s;
+                """,
                 {"status_filter": status_filter},
             )
             user_tasks = self.cursor.fetchall()

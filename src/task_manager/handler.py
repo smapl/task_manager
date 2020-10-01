@@ -21,7 +21,8 @@ class work_db(object):
         try:
             self.cursor.execute(f"insert into {self.table_name} (login, password, authtoken) values ('{login}', '{password}', '{token}');")
             self.connection.commit()
-
+            self._disconnect()
+            
             return token
 
         except Exception as ex:
@@ -29,7 +30,7 @@ class work_db(object):
             return "error"
         
         
-    def disconnect(self):
+    def _disconnect(self):
         self.connection.close()
 
         return "disconnected"

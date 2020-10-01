@@ -29,4 +29,7 @@ class work_db(object):
             return "error"
         
         
-        
+    def disconnect(self):
+        self.connection.close()
+
+        return "disconnected"

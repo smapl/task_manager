@@ -21,6 +21,7 @@ def main_page():
     result = hand.create_user(user_login, user_password)
 
     if result != "error":
+        hand.disconnect()
         return result
 
     else:

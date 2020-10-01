@@ -6,8 +6,8 @@ from .utils import generate_token, give_args
 
 
 class work_db(object):
-    def __init__(self):
-        postgre_login, postgre_password = give_args()
+    def __init__(self, postgre_login: str, postgre_password):
+        
 
         self.connection = psycopg2.connect(
             dbname="users",

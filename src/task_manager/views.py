@@ -6,10 +6,13 @@ from flask import Flask, request
 
 from .create_app import create_app
 from .handler import work_db
-from .utils import parse_args
+from .utils import parse_args, give_args
 
 
 app = create_app()
+
+postgre_login, postgre_password = give_args()
+
 
 # TODO: NEED ON ALWAYS RETURN JSON
 @app.route("/create_user", methods=["POST"])
@@ -20,7 +23,7 @@ def main_page():
     user_login = data["login"]
     user_password = data["password"]
 
-    hand = work_db()
+    hand = work_db(postgre_login, postgre_password)
     result = hand.create_user(user_login, user_password)
 
     if result != "error":
@@ -43,7 +46,7 @@ def create_task():
 
     task_create_datetime = datetime.now()
 
-    hand = work_db()
+    hand = work_db(postgre_login, postgre_password)
     result = hand.create_task(
         task_name,
         task_description,
@@ -72,7 +75,7 @@ def check_tasks():
     except KeyError:
         status_filter = None
 
-    hand = work_db()
+    hand = work_db(postgre_login, postgre_password)
     result = hand.check_task_status(user_token, status_filter)
 
     return str(result)

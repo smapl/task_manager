@@ -11,7 +11,6 @@ def generate_token():
     return token
 
 
-
 def give_args():
     parser = argparse.ArgumentParser(description='Ping script')
 

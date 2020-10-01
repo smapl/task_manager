@@ -8,6 +8,7 @@ from .utils import generate_token, give_args
 class work_db(object):
     def __init__(self):
         postgre_login, postgre_password = give_args()
+        
         self.connection = psycopg2.connect(
                 dbname="users", user=postgre_login, password=postgre_password, host="localhost"
             )
@@ -22,7 +23,7 @@ class work_db(object):
             self.cursor.execute(f"insert into {self.table_name} (login, password, authtoken) values ('{login}', '{password}', '{token}');")
             self.connection.commit()
             self._disconnect()
-            
+
             return token
 
         except Exception as ex:

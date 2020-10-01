@@ -1,8 +1,10 @@
 import hashlib
 import argparse
+import json
 
 from datetime import datetime
 
+from flask import request
 
 def generate_token():
     now_date = str(datetime.now())
@@ -23,3 +25,11 @@ def give_args():
     postgre_password = args.password
 
     return postgre_login, postgre_password
+
+def parse_args(data):
+    data = request.data
+    data = data.decode("utf-8")
+    data = json.loads(data)
+
+    return data
+

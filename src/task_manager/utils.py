@@ -24,7 +24,6 @@ def give_args() -> tuple:
     parser.add_argument("--password", action="store", dest="password")
 
     args = parser.parse_args()
-
     postgre_login = args.login
     postgre_password = args.password
 
@@ -58,3 +57,21 @@ def definitions_user_id(authtoken) -> str:
     connection.close()
 
     return user_id
+
+
+def correct_check_task(begin_task_list: list):
+    task_list = []
+    for i in range(len(begin_task_list)):
+        separate_task = {
+            "id": begin_task_list[i][0],
+            "name": begin_task_list[i][1],
+            "description": begin_task_list[i][2],
+            "create_datetime": begin_task_list[i][3],
+            "status": begin_task_list[i][4],
+            "planned_completed": begin_task_list[i][5],
+        }
+        task_list.append(separate_task)
+
+    finish_result = {"tasks": task_list}
+
+    return finish_result

@@ -2,7 +2,7 @@ import psycopg2
 
 from loguru import logger
 
-from .utils import generate_token, give_args, definitions_user_id
+from .utils import generate_token, give_args, definitions_user_id, correct_check_task
 
 
 class work_db(object):
@@ -92,14 +92,15 @@ class work_db(object):
         if status_filter == None:
             self.cursor.execute(
                 f"""
-                    SELECT name, description, create_datetime, status, planned_completed 
+                    SELECT id, name, description, create_datetime, status, planned_completed 
                     FROM {self.table_name_task} 
                     WHERE user_id = '{user_id}';
                 """
             )
             user_tasks = self.cursor.fetchall()
 
-            return user_tasks
+            tasks = correct_check_task(user_tasks)
+            return tasks
 
         else:
             self.cursor.execute(
@@ -112,7 +113,8 @@ class work_db(object):
             )
             user_tasks = self.cursor.fetchall()
 
-            return user_tasks
+            tasks = correct_check_task(user_tasks)
+            return tasks
 
     def change_task_rows(self, task_id: int, user_token: str, new_values: dict):
 

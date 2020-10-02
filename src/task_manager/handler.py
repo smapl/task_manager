@@ -51,6 +51,11 @@ class work_db(object):
         planned_completed,
         user_token,
     ):
+        if len(name) > 30:
+            return "you have exceeded the character limit (30)"
+
+        elif len(description) > 300:
+            return "you have exceeded the character limit (300)"
 
         status = status.lower()
         if status not in self.status_list:

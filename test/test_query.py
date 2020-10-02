@@ -35,12 +35,17 @@ def check_tasks():
 
 
 def change_task_status():
-    url = "http://127.0.0.1:5000/change_task_status"
+    url = "http://127.0.0.1:5000/change_task_rows"
 
     data = {
-        "authtoken": "85d88754807b90e0a99c46b0103a017ca35649b1553b0868b86f6abe9b8610ef",
-        "task_id": "6",
-        "new_status": "work",
+        "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3",
+        "task_id": "1",
+        "new_values": {
+            "status": "work",
+            "planned_completed": "2020-11-12 16:30",
+            "name": "creating task",
+            "description": "i can not create this task",
+        },
     }
 
     res = requests.post(url, json=data)

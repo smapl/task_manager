@@ -145,7 +145,18 @@ class work_db(object):
         )
         user_id = self.cursor.fetchall()[0][0]
 
-        try:
+        self.cursor.execute(
+            f"""
+                SELECT name FROM {self.table_name_task} 
+                WHERE id = {task_id} AND user_id = '{user_id}';
+            """,
+        )
+        validity = self.cursor.fetchall()
+
+        if len(validity) == 0:
+            return "access to this task is denied"
+
+        else:
             self.cursor.execute(
                 f"""
                 UPDATE {self.table_name_task} 
@@ -158,10 +169,6 @@ class work_db(object):
             self._disconnect()
 
             return True
-
-        except Exception as ex:
-            logger.error(ex)
-            return ex
 
     def _disconnect(self):
         self.connection.close()

@@ -34,8 +34,22 @@ def check_tasks():
     return res.text
 
 
+def change_task_status():
+    url = "http://127.0.0.1:5000/change_task_status"
+
+    data = {
+        "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3",
+        "task_id": "1",
+        "new_status": "completed",
+    }
+
+    res = requests.post(url, json=data)
+    return res.text
+
+
 if __name__ == "__main__":
     # cu = create_user()
     # ct = create_task()
-    cc = check_tasks()
-    print(cc)
+    # cc = check_tasks()
+    sts = change_task_status()
+    print(sts)

@@ -81,9 +81,22 @@ def check_tasks():
     return str(result)
 
 
-# @app.route("/change_task_status", methods=['POST'])
-# def change_task_status():
-#     pass
+@app.route("/change_task_status", methods=["POST"])
+def change_task_status():
+    data = parse_args(request.data)
+
+    user_token = data["authtoken"]
+    new_status = data["new_status"]
+    task_id = int(data["task_id"])
+
+    hand = work_db(postgre_login, postgre_password)
+    result = hand.change_task_status(task_id, user_token, new_status)
+
+    if result == True:
+        return "200"
+
+    else:
+        return str(result)
 
 
 # @app.route("/check_history", methods=["GET"])

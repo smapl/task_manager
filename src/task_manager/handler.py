@@ -71,11 +71,6 @@ class work_db(object):
             )
             user_id = self.cursor.fetchall()[0][0]
 
-            logger.info(create_datetime)
-            logger.info(planned_completed)
-            logger.info(user_token)
-            logger.info(user_id)
-
             self.cursor.execute(
                 f"""
                     INSERT INTO {self.table_name_task} 

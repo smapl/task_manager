@@ -17,6 +17,7 @@ class work_db(object):
         self.cursor = self.connection.cursor()
         self.table_name_user = "users_data"
         self.table_name_task = "tasks"
+        self.status_list = ["new", "planned", "work", "completed"]
 
     def create_user(self, login: str, password: str):
         token = generate_token()
@@ -51,25 +52,15 @@ class work_db(object):
         user_token,
     ):
 
-        status_list = ["new", "planned", "work", "completed"]
         status = status.lower()
-        if status not in status_list:
+        if status not in self.status_list:
             return "entered status error"
 
         create_datetime = str(create_datetime)
 
-        print(f"\n{create_datetime}\n{planned_completed}\n")
-
         try:
 
-            self.cursor.execute(
-                f"""
-                    SELECT id FROM {self.table_name_user} 
-                    WHERE authtoken = %(user_token)s;
-                """,
-                {"user_token": user_token},
-            )
-            user_id = self.cursor.fetchall()[0][0]
+            user_id = definitions_user_id(user_token)
 
             self.cursor.execute(
                 f"""
@@ -124,14 +115,8 @@ class work_db(object):
             return user_tasks
 
     def change_task_rows(self, task_id: int, user_token: str, new_values: dict):
-        self.cursor.execute(
-            f"""
-                SELECT id FROM {self.table_name_user} 
-                WHERE authtoken = %(user_token)s;
-            """,
-            {"user_token": user_token},
-        )
-        user_id = self.cursor.fetchall()[0][0]
+
+        user_id = definitions_user_id(user_token)
 
         self.cursor.execute(
             f"""
@@ -147,6 +132,13 @@ class work_db(object):
         else:
             change_query = ""
             for name_column in new_values:
+
+                if (
+                    name_column == "status"
+                    and new_values[name_column] not in self.status_list
+                ):
+                    return "it is impossible to put such a status"
+
                 change_query += f"{name_column} = '{new_values[name_column]}', "
 
             change_query = change_query[:-2]

@@ -4,6 +4,8 @@ import json
 
 from datetime import datetime
 
+import psycopg2
+
 from loguru import logger
 from flask import request
 
@@ -36,3 +38,23 @@ def parse_args(data) -> dict:
 
     return data
 
+
+def definitions_user_id(authtoken) -> str:
+    postgre_login, postgre_password = give_args()
+
+    connection = psycopg2.connect(
+        dbname="users", user=postgre_login, password=postgre_password, host="localhost",
+    )
+    cursor = connection.cursor()
+    table_name_user = "users_data"
+    cursor.execute(
+        f"""
+                    SELECT id FROM {table_name_user} 
+                    WHERE authtoken = %(authtoken)s;
+                """,
+        {"authtoken": authtoken},
+    )
+    user_id = cursor.fetchall()[0][0]
+    connection.close()
+
+    return user_id

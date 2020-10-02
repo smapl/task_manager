@@ -2,7 +2,7 @@ import psycopg2
 
 from loguru import logger
 
-from .utils import generate_token, give_args
+from .utils import generate_token, give_args, definitions_user_id
 
 
 class work_db(object):
@@ -101,14 +101,7 @@ class work_db(object):
 
     def check_task_status(self, user_token: str, status_filter: str):
 
-        self.cursor.execute(
-            f"""
-                SELECT id FROM {self.table_name_user} 
-                WHERE authtoken = %(user_token)s;
-            """,
-            {"user_token": user_token},
-        )
-        user_id = self.cursor.fetchall()[0][0]
+        user_id = definitions_user_id(user_token)
 
         if status_filter == None:
             self.cursor.execute(
@@ -135,7 +128,7 @@ class work_db(object):
 
             return user_tasks
 
-    def change_task_status(self, task_id: int, user_token: str, new_status: str):
+    def change_task_rows(self, task_id: int, user_token: str, new_values: dict):
         self.cursor.execute(
             f"""
                 SELECT id FROM {self.table_name_user} 
@@ -157,12 +150,17 @@ class work_db(object):
             return "access to this task is denied"
 
         else:
+            change_query = ""
+            for name_column in new_values:
+                change_query += f"{name_column} = '{new_values[name_column]}', "
+
+            change_query = change_query[:-2]
             self.cursor.execute(
                 f"""
-                UPDATE {self.table_name_task} 
-                SET status = '{new_status}'
-                WHERE id = {task_id} and user_id = {user_id}
-            
+                UPDATE {self.table_name_task}
+                SET {change_query}
+                WHERE id = {task_id} and user_id = '{user_id}';
+
             """
             )
             self.connection.commit()

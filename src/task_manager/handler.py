@@ -3,7 +3,13 @@ import psycopg2
 from loguru import logger
 from datetime import datetime
 
-from .utils import generate_token, give_args, definitions_user_id, correct_check_task
+from .utils import (
+    generate_token,
+    give_args,
+    definitions_user_id,
+    correct_check_task,
+    correct_check_history,
+)
 
 
 class MainHandler(object):
@@ -204,6 +210,33 @@ class MainHandler(object):
             self._disconnect()
 
             return True
+
+    def check_history_change(self, user_token, task_id):
+        user_id = definitions_user_id(user_token)
+
+        self.cursor.execute(
+            f"""
+                SELECT name FROM {self.table_name_task} 
+                WHERE id = {task_id} AND user_id = {user_id};
+            """,
+        )
+        validity = self.cursor.fetchall()
+
+        if len(validity) == 0:
+            return "access to this task is denied"
+
+        else:
+            self.cursor.execute(
+                f"""
+                    SELECT name, description, status, planned_completed, change_datetime
+                    FROM {self.table_old_version}
+                    WHERE task_id = {task_id};
+                """
+            )
+
+            history = self.cursor.fetchall()
+            history_list = correct_check_history(history)
+            return str(history_list)
 
     def _disconnect(self):
         self.connection.close()

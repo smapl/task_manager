@@ -75,3 +75,26 @@ def correct_check_task(begin_task_list: list):
     finish_result = {"tasks": task_list}
 
     return finish_result
+
+
+def correct_check_history(history_list):
+    task_list = []
+    for i in range(len(history_list)):
+        separate_task = {
+            "name": history_list[i][0],
+            "description": history_list[i][1],
+            "status": history_list[i][2],
+            "planned_completed": history_list[i][3],
+            "change_datetime": history_list[i][4],
+        }
+        history = {
+            key: separate_task[key]
+            for key in separate_task
+            if separate_task[key] != None
+        }
+        task_list.append(history)
+
+    finish_result = {"tasks": task_list}
+
+    return finish_result
+

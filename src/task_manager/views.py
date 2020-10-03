@@ -99,6 +99,14 @@ def change_task_status():
         return str(result)
 
 
-# @app.route("/check_history", methods=["GET"])
-# def check_history():
-#     pass
+@app.route("/check_history_change", methods=["GET"])
+def check_history():
+    data = parse_args(request.data)
+
+    user_token = data["authtoken"]
+    task_id = int(data["task_id"])
+
+    hand = MainHandler(postgre_login, postgre_password)
+    result = hand.check_history_change(user_token, task_id)
+
+    return str(result)

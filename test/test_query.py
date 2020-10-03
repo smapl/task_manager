@@ -12,11 +12,11 @@ def create_user():
 def create_task():
     url = "http://127.0.0.1:5000/create_task"
     data = {
-        "name": "create testing",
-        "description": "me need create test for company",
-        "status": "New",
-        "planned_completed": "2020-10-08 08:30",
-        "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3",
+        "name": "frontend",
+        "description": "create front to site",
+        "status": "new",
+        "planned_completed": "2020-1-12 18:20",
+        "authtoken": "b95dda629968cf2293642deb70b6e3eb0882f84c090ffce43108aa73efd23264",
     }
     res = requests.post(url, json=data)
 
@@ -39,8 +39,8 @@ def change_task_status():
 
     data = {
         "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3",
-        "task_id": "2",
-        "new_values": {"status": "asdqwe"},
+        "task_id": "1",
+        "new_values": {"status": "completed", "description": "i create this"},
     }
 
     res = requests.post(url, json=data)
@@ -50,6 +50,6 @@ def change_task_status():
 if __name__ == "__main__":
     # cu = create_user()
     # ct = create_task()
-    cc = check_tasks()
-    # sts = change_task_status()
-    print(cc)
+    # cc = check_tasks()
+    sts = change_task_status()
+    print(sts)

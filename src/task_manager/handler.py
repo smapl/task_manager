@@ -1,6 +1,7 @@
 import psycopg2
 
 from loguru import logger
+from datetime import datetime
 
 from .utils import generate_token, give_args, definitions_user_id, correct_check_task
 
@@ -17,6 +18,7 @@ class MainHandler(object):
         self.cursor = self.connection.cursor()
         self.table_name_user = "users_data"
         self.table_name_task = "tasks"
+        self.table_old_version = "old_version"
         self.status_list = ["new", "planned", "work", "completed"]
 
     def create_user(self, login: str, password: str):
@@ -149,6 +151,24 @@ class MainHandler(object):
                 change_query += f"{name_column} = '{new_values[name_column]}', "
 
             change_query = change_query[:-2]
+
+            self.cursor.execute(
+                f"""
+                    SELECT id, name, description, status, planned_completed
+                    FROM {self.table_name_task}
+                    WHERE id = {task_id} and user_id = {user_id};  
+                """
+            )
+
+            old_version_task = self.cursor.fetchall()
+            old_version_task = {
+                "id": old_version_task[0][0],
+                "name": old_version_task[0][1],
+                "description": old_version_task[0][2],
+                "status": old_version_task[0][3],
+                "planned_completed": old_version_task[0][4],
+            }
+
             self.cursor.execute(
                 f"""
                 UPDATE {self.table_name_task}
@@ -157,6 +177,29 @@ class MainHandler(object):
 
             """
             )
+            self.connection.commit()
+
+            changed_rows = [key for key in new_values]
+            str_change_rows = ", ".join(changed_rows) + ", change_datetime, task_id"
+            datetime_change = str(datetime.now())
+
+            to_old_version = ""
+            for key in changed_rows:
+
+                to_old_version += f"'{old_version_task[key]}', "
+
+            to_old_version = to_old_version + f"'{datetime_change}', {task_id}"
+
+            logger.info(str_change_rows)
+            logger.info(to_old_version)
+
+            self.cursor.execute(
+                f"""
+                    INSERT INTO {self.table_old_version} ({str_change_rows})
+                    VALUES ({to_old_version});
+                """
+            )
+
             self.connection.commit()
             self._disconnect()
 

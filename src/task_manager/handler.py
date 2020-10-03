@@ -236,7 +236,9 @@ class MainHandler(object):
 
             history = self.cursor.fetchall()
             history_list = correct_check_history(history)
-            return str(history_list)
+
+            self._disconnect()
+            return history
 
     def _disconnect(self):
         self.connection.close()

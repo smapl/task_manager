@@ -71,7 +71,7 @@ class work_db(object):
                 f"""
                     INSERT INTO {self.table_name_task} 
                     (name, description, create_datetime, status, planned_completed, user_id) 
-                    VALUES (%(name)s, %(description)s,'{create_datetime}',%(status)s, %(planned_completed)s, '{user_id}');
+                    VALUES (%(name)s, %(description)s,'{create_datetime}',%(status)s, %(planned_completed)s, {user_id});
                 """,
                 {
                     "name": name,
@@ -99,7 +99,7 @@ class work_db(object):
                 f"""
                     SELECT id, name, description, create_datetime, status, planned_completed 
                     FROM {self.table_name_task} 
-                    WHERE user_id = '{user_id}';
+                    WHERE user_id = {user_id};
                 """
             )
             user_tasks = self.cursor.fetchall()
@@ -128,7 +128,7 @@ class work_db(object):
         self.cursor.execute(
             f"""
                 SELECT name FROM {self.table_name_task} 
-                WHERE id = {task_id} AND user_id = '{user_id}';
+                WHERE id = {task_id} AND user_id = {user_id};
             """,
         )
         validity = self.cursor.fetchall()
@@ -153,7 +153,7 @@ class work_db(object):
                 f"""
                 UPDATE {self.table_name_task}
                 SET {change_query}
-                WHERE id = {task_id} and user_id = '{user_id}';
+                WHERE id = {task_id} and user_id = {user_id};
 
             """
             )

@@ -39,13 +39,8 @@ def change_task_status():
 
     data = {
         "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3",
-        "task_id": "1",
-        "new_values": {
-            "status": "work",
-            "planned_completed": "2020-11-12 16:30",
-            "name": "creating task",
-            "description": "i can not create this task",
-        },
+        "task_id": "2",
+        "new_values": {"status": "asdqwe"},
     }
 
     res = requests.post(url, json=data)
@@ -55,6 +50,6 @@ def change_task_status():
 if __name__ == "__main__":
     # cu = create_user()
     # ct = create_task()
-    # cc = check_tasks()
-    sts = change_task_status()
-    print(sts)
+    cc = check_tasks()
+    # sts = change_task_status()
+    print(cc)

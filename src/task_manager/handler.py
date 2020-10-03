@@ -59,7 +59,7 @@ class MainHandler(object):
         planned_completed,
         user_token,
     ):
-        if len(name) > 30:
+        if len(name) > 100:
             return "you have exceeded the character limit (30)"
 
         elif len(description) > 300:

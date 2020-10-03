@@ -30,25 +30,19 @@ class MainHandler(object):
     def create_user(self, login: str, password: str):
         token = generate_token()
 
-        try:
+        self.cursor.execute(
+            f"""
+                INSERT INTO {self.table_name_user} 
+                (login, password, authtoken) 
+                VALUES (%(login)s, %(password)s, '{token}');
+            """,
+            {"login": login, "password": password},
+        )
 
-            self.cursor.execute(
-                f"""
-                    INSERT INTO {self.table_name_user} 
-                    (login, password, authtoken) 
-                    VALUES (%(login)s, %(password)s, '{token}');
-                """,
-                {"login": login, "password": password},
-            )
+        self.connection.commit()
+        self._disconnect()
 
-            self.connection.commit()
-            self._disconnect()
-
-            return token
-
-        except Exception as ex:
-            logger.error(ex)
-            return ex
+        return token
 
     def create_task(
         self,
@@ -71,32 +65,26 @@ class MainHandler(object):
 
         create_datetime = str(create_datetime)
 
-        try:
+        user_id = definitions_user_id(user_token)
 
-            user_id = definitions_user_id(user_token)
+        self.cursor.execute(
+            f"""
+                INSERT INTO {self.table_name_task} 
+                (name, description, create_datetime, status, planned_completed, user_id) 
+                VALUES (%(name)s, %(description)s,'{create_datetime}',%(status)s, %(planned_completed)s, {user_id});
+            """,
+            {
+                "name": name,
+                "description": description,
+                "status": status,
+                "planned_completed": planned_completed,
+            },
+        )
 
-            self.cursor.execute(
-                f"""
-                    INSERT INTO {self.table_name_task} 
-                    (name, description, create_datetime, status, planned_completed, user_id) 
-                    VALUES (%(name)s, %(description)s,'{create_datetime}',%(status)s, %(planned_completed)s, {user_id});
-                """,
-                {
-                    "name": name,
-                    "description": description,
-                    "status": status,
-                    "planned_completed": planned_completed,
-                },
-            )
+        self.connection.commit()
+        self._disconnect()
 
-            self.connection.commit()
-            self._disconnect()
-
-            return True
-
-        except TypeError as ex:
-            logger.error(ex)
-            return str(ex)
+        return True
 
     def check_task_status(self, user_token: str, status_filter: str):
 

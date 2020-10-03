@@ -238,7 +238,7 @@ class MainHandler(object):
             history_list = correct_check_history(history)
 
             self._disconnect()
-            return history
+            return history_list
 
     def _disconnect(self):
         self.connection.close()

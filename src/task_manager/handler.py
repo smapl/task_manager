@@ -5,7 +5,7 @@ from loguru import logger
 from .utils import generate_token, give_args, definitions_user_id, correct_check_task
 
 
-class work_db(object):
+class MainHandler(object):
     def __init__(self, postgre_login: str, postgre_password):
 
         self.connection = psycopg2.connect(

@@ -5,7 +5,7 @@ from datetime import datetime
 from flask import Flask, request
 
 from .create_app import create_app
-from .handler import work_db
+from .handler import MainHandler
 from .utils import parse_args, give_args
 
 
@@ -23,7 +23,7 @@ def main_page():
     user_login = data["login"]
     user_password = data["password"]
 
-    hand = work_db(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password)
     result = hand.create_user(user_login, user_password)
 
     if result != "error":
@@ -46,7 +46,7 @@ def create_task():
 
     task_create_datetime = datetime.now()
 
-    hand = work_db(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password)
     result = hand.create_task(
         task_name,
         task_description,
@@ -75,7 +75,7 @@ def check_tasks():
     except KeyError:
         status_filter = None
 
-    hand = work_db(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password)
     result = hand.check_task_status(user_token, status_filter)
 
     return str(result)
@@ -89,7 +89,7 @@ def change_task_status():
     new_values = data["new_values"]
     task_id = int(data["task_id"])
 
-    hand = work_db(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password)
     result = hand.change_task_rows(task_id, user_token, new_values)
 
     if result == True:

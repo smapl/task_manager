@@ -134,6 +134,7 @@ class MainHandler(object):
 
         else:
             change_query = ""
+            finish_datetime = None
             for name_column in new_values:
 
                 if (
@@ -142,10 +143,15 @@ class MainHandler(object):
                 ):
                     return "it is impossible to put such a status"
 
+                if name_column == "status" and new_values[name_column] == "completed":
+                    finish_datetime = str(datetime.now())
+                    logger.info(finish_datetime)
+                    change_query += f"finish_datetime = '{finish_datetime}', "
+
                 change_query += f"{name_column} = '{new_values[name_column]}', "
 
             change_query = change_query[:-2]
-
+            logger.info(change_query)
             self.cursor.execute(
                 f"""
                     SELECT id, name, description, status, planned_completed
@@ -183,9 +189,6 @@ class MainHandler(object):
                 to_old_version += f"'{old_version_task[key]}', "
 
             to_old_version = to_old_version + f"'{datetime_change}', {task_id}"
-
-            logger.info(str_change_rows)
-            logger.info(to_old_version)
 
             self.cursor.execute(
                 f"""

@@ -77,7 +77,7 @@ def check_tasks_status():
 
 
 @app.route("/change_task_rows", methods=["POST"])
-def change_task_status():
+def change_task_rows():
     data = parse_args(request.data)
 
     user_token = data["authtoken"]

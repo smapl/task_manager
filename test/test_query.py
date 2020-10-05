@@ -6,7 +6,7 @@ def create_user():
     data = {"login": "Smapl", "password": "qwerty"}
     res = requests.post(url, json=data)
 
-    return res.text
+    return res.json()
 
 
 def create_task():
@@ -20,18 +20,18 @@ def create_task():
     }
     res = requests.post(url, json=data)
 
-    return res.text
+    return res.json()
 
 
 def check_tasks():
-    url = "http://127.0.0.1:5000/check_task_status"
+    url = "http://127.0.0.1:5000/check_tasks_status"
 
     data = {
         "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3"
     }
 
     res = requests.get(url, json=data)
-    return res.text
+    return res.json()
 
 
 def change_task_rows():
@@ -44,7 +44,7 @@ def change_task_rows():
     }
 
     res = requests.post(url, json=data)
-    return res.text
+    return res.json()
 
 
 def check_history_change():
@@ -56,13 +56,13 @@ def check_history_change():
     }
 
     res = requests.get(url, json=data)
-    return res.text
+    return res.json()
 
 
 if __name__ == "__main__":
     # cu = create_user()
     # ct = create_task()
-    # cc = check_tasks()
-    cts = change_task_rows()
+    cc = check_tasks()
+    # cts = change_task_rows()
     # chc = check_history_change()
-    print(cts)
+    print(cc)

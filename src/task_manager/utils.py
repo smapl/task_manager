@@ -22,12 +22,17 @@ def give_args() -> tuple:
 
     parser.add_argument("--login", action="store", dest="login")
     parser.add_argument("--password", action="store", dest="password")
+    parser.add_argument("--host", action="store", dest="host")
+    parser.add_argument("--db_name", action="store", dest="db_name")
 
     args = parser.parse_args()
+
     postgre_login = args.login
     postgre_password = args.password
+    host = args.host
+    db_name = args.db_name
 
-    return postgre_login, postgre_password
+    return postgre_login, postgre_password, host, db_name
 
 
 def parse_args(data) -> dict:
@@ -39,10 +44,13 @@ def parse_args(data) -> dict:
 
 
 def definitions_user_id(authtoken) -> str:
-    postgre_login, postgre_password = give_args()
+    cli_args = give_args()
+    postgre_login, postgre_password = cli_args[0], cli_args[1]
 
+    cli_args = give_args()
+    host, db_name = cli_args[2], cli_args[3]
     connection = psycopg2.connect(
-        dbname="users", user=postgre_login, password=postgre_password, host="localhost",
+        dbname=db_name, user=postgre_login, password=postgre_password, host=host,
     )
     cursor = connection.cursor()
     table_name_user = "users_data"

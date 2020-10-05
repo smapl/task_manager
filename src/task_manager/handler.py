@@ -13,13 +13,12 @@ from .utils import (
 
 
 class MainHandler(object):
-    def __init__(self, postgre_login: str, postgre_password):
+    def __init__(
+        self, postgre_login: str, postgre_password: str, host: str, db_name: str
+    ):
 
         self.connection = psycopg2.connect(
-            dbname="users",
-            user=postgre_login,
-            password=postgre_password,
-            host="localhost",
+            dbname=db_name, user=postgre_login, password=postgre_password, host=host,
         )
         self.cursor = self.connection.cursor()
         self.table_name_user = "users_data"

@@ -11,7 +11,7 @@ from .utils import parse_args, give_args
 
 app = create_app()
 
-postgre_login, postgre_password = give_args()
+postgre_login, postgre_password, host, db_name = give_args()
 
 
 @app.route("/create_user", methods=["POST"])
@@ -22,7 +22,7 @@ def create_user():
     user_login = data["login"]
     user_password = data["password"]
 
-    hand = MainHandler(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.create_user(user_login, user_password)
 
     return {"authtoken": result}
@@ -41,7 +41,7 @@ def create_task():
 
     task_create_datetime = datetime.now()
 
-    hand = MainHandler(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.create_task(
         task_name,
         task_description,
@@ -70,7 +70,7 @@ def check_tasks_status():
     except KeyError:
         status_filter = None
 
-    hand = MainHandler(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.check_task_status(user_token, status_filter)
 
     return {"respone": result}
@@ -84,7 +84,7 @@ def change_task_rows():
     new_values = data["new_values"]
     task_id = int(data["task_id"])
 
-    hand = MainHandler(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.change_task_rows(task_id, user_token, new_values)
 
     if result == True:
@@ -101,7 +101,7 @@ def check_history():
     user_token = data["authtoken"]
     task_id = int(data["task_id"])
 
-    hand = MainHandler(postgre_login, postgre_password)
+    hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.check_history_change(user_token, task_id)
 
     if type(result) == list:

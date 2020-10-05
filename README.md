@@ -14,6 +14,7 @@ task_manager
     --- users_data
         |
         | (column names)
+        --- id SERIAL
         --- login (VARCHAR(30))
         --- pawwsord (VARCHAR(30))
         --- authtoken (VARCHAR(100))
@@ -22,6 +23,7 @@ task_manager
     ---tasks
         |
         | (column names)
+        --- id SERIAL
         --- name (VARCHAR(100))
         --- description (VARCHAR(300))
         --- create_datetime (TIMESTAMP)
@@ -34,6 +36,7 @@ task_manager
     ---old_version
         |
         | (column names)
+        --- id SERIAL
         --- name (VARCHAR(100))
         --- description (VARCHAR(300))
         --- status (VARCHAR(100))

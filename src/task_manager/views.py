@@ -2,7 +2,7 @@ import json
 
 from datetime import datetime
 
-from flask import Flask, request
+from flask import Flask, request, session
 
 from .create_app import create_app
 from .handler import MainHandler
@@ -14,9 +14,8 @@ app = create_app()
 postgre_login, postgre_password = give_args()
 
 
-# TODO: NEED ON ALWAYS RETURN JSON
 @app.route("/create_user", methods=["POST"])
-def main_page():
+def create_user():
 
     data = parse_args(request.data)
 
@@ -26,11 +25,7 @@ def main_page():
     hand = MainHandler(postgre_login, postgre_password)
     result = hand.create_user(user_login, user_password)
 
-    if result != "error":
-        return result
-
-    else:
-        return "error"
+    return {"authtoken": result}
 
 
 @app.route("/create_task", methods=["POST"])
@@ -57,14 +52,14 @@ def create_task():
     )
 
     if result == True:
-        return "200"
+        return {"respone": 200}
 
     else:
-        return result
+        return {"error": result}
 
 
-@app.route("/check_tasks", methods=["GET"])
-def check_tasks():
+@app.route("/check_tasks_status", methods=["GET"])
+def check_tasks_status():
 
     data = parse_args(request.data)
 
@@ -78,7 +73,7 @@ def check_tasks():
     hand = MainHandler(postgre_login, postgre_password)
     result = hand.check_task_status(user_token, status_filter)
 
-    return str(result)
+    return {"respone": result}
 
 
 @app.route("/change_task_rows", methods=["POST"])
@@ -93,10 +88,10 @@ def change_task_status():
     result = hand.change_task_rows(task_id, user_token, new_values)
 
     if result == True:
-        return "200"
+        return {"respone": 200}
 
     else:
-        return str(result)
+        return {"error": result}
 
 
 @app.route("/check_history_change", methods=["GET"])
@@ -109,4 +104,7 @@ def check_history():
     hand = MainHandler(postgre_login, postgre_password)
     result = hand.check_history_change(user_token, task_id)
 
-    return str(result)
+    if type(result) == list:
+        return {"tasks": result}
+    else:
+        return {"errpr": result}

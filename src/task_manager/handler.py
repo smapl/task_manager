@@ -27,7 +27,7 @@ class MainHandler(object):
         self.table_old_version = "old_version"
         self.status_list = ["new", "planned", "work", "completed"]
 
-    def create_user(self, login: str, password: str):
+    def create_user(self, login: str, password: str) -> str:
         token = generate_token()
 
         self.cursor.execute(
@@ -86,7 +86,7 @@ class MainHandler(object):
 
         return True
 
-    def check_task_status(self, user_token: str, status_filter: str):
+    def check_task_status(self, user_token: str, status_filter: str) -> dict:
 
         user_id = definitions_user_id(user_token)
 

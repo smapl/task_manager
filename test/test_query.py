@@ -12,11 +12,11 @@ def create_user():
 def create_task():
     url = "http://127.0.0.1:5000/create_task"
     data = {
-        "name": "frontend",
-        "description": "create front to site",
+        "name": "backend",
+        "description": "create backend to site",
         "status": "new",
-        "planned_completed": "2020-1-12 18:20",
-        "authtoken": "b95dda629968cf2293642deb70b6e3eb0882f84c090ffce43108aa73efd23264",
+        "planned_completed": "2021-7-12 12:30",
+        "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3",
     }
     res = requests.post(url, json=data)
 
@@ -24,7 +24,7 @@ def create_task():
 
 
 def check_tasks():
-    url = "http://127.0.0.1:5000/check_tasks"
+    url = "http://127.0.0.1:5000/check_task_status"
 
     data = {
         "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3"
@@ -34,13 +34,13 @@ def check_tasks():
     return res.text
 
 
-def change_task_status():
+def change_task_rows():
     url = "http://127.0.0.1:5000/change_task_rows"
 
     data = {
         "authtoken": "914fe08d9f8eaadddf5073516ba89976d8023812bc60d474f051f57a8e91eaa3",
-        "task_id": "1",
-        "new_values": {"status": "completed", "description": "i create this"},
+        "task_id": "4",
+        "new_values": {"status": "completed"},
     }
 
     res = requests.post(url, json=data)
@@ -63,6 +63,6 @@ if __name__ == "__main__":
     # cu = create_user()
     # ct = create_task()
     # cc = check_tasks()
-    # sts = change_task_status()
-    chc = check_history_change()
-    print(chc)
+    cts = change_task_rows()
+    # chc = check_history_change()
+    print(cts)

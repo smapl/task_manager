@@ -7,7 +7,7 @@
 
 ##### Структура бд
 ```
-db
+| (database)
 task_manager
     |
     | (table)
@@ -39,4 +39,18 @@ task_manager
         --- status (VARCHAR(100))
         --- planned_completed (TIMESTAMP)
         --- finish_datetime (TIMESTAMP)
+```
+
+##### Настройка рабочей среды
+
+После клонирования проекта перейдите в корневую директорию и пропишите следующие команды:  
+```
+pyenv local 3.8.5
+poetry install
+poetry run python src/__main__.py --login login --password password --host localhost --db_name task_manager
+```
+Последняя строка запускате сервис, при запуске сервиса в аргументах командной строки передаются: логин пользователя postgresqlб пароль пользователя, хост на котором работает бд и название бд; соответсвенно .  
+Запустить проекта можно также прописав в консоль из корневой папки проекта следующее:  
+```
+bash entrypoint.sh
 ```

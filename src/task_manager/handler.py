@@ -63,9 +63,11 @@ class MainHandler(object):
         user_token,
     ):
         if len(name) > 100:
+            logger.error(f"your lenth is {len(name)}")
             return "you have exceeded the character limit (30)"
 
         elif len(description) > 300:
+            logger.error(f"your lenth is {len(description)}")
             return "you have exceeded the character limit (300)"
 
         status = status.lower()
@@ -75,24 +77,25 @@ class MainHandler(object):
         create_datetime = str(create_datetime)
 
         user_id = definitions_user_id(user_token)
-
-        self.cursor.execute(
-            f"""
-                INSERT INTO {self.table_name_task} 
-                (name, description, create_datetime, status, planned_completed, user_id) 
-                VALUES ('{name}', '{description}','{create_datetime}','{status}', '{planned_completed}', {user_id});
-            """
-        )
+        try:
+            self.cursor.execute(
+                f"""
+                    INSERT INTO {self.table_name_task} 
+                    (name, description, create_datetime, status, planned_completed, user_id) 
+                    VALUES ('{name}', '{description}','{create_datetime}','{status}', '{planned_completed}', {user_id});
+                """
+            )
+        except Exception as ex:
+            logger.error(ex)
+            return ex
 
         self.connection.commit()
         self._disconnect()
 
         return True
 
-    def check_task_status(self, user_token: str, status_filter: str) -> dict:
-
+    def check_task_status(self, user_token: str, status_filter: str):
         user_id = definitions_user_id(user_token)
-
         if status_filter == None:
             self.cursor.execute(
                 f"""

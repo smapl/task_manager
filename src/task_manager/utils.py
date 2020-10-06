@@ -11,7 +11,11 @@ from flask import request
 
 
 def avoid_sql_injection(text: str) -> str:
-    clear_text = text.replace("'", "".replace(";", "")).replace("-", "")
+    try:
+        clear_text = text.replace("'", "").replace(";", "").replace("-", "")
+    except AttributeError:
+        logger.error("AttributeError")
+        return text
 
     return clear_text
 
@@ -80,9 +84,9 @@ def correct_check_task(begin_task_list: list):
             "id": begin_task_list[i][0],
             "name": begin_task_list[i][1],
             "description": begin_task_list[i][2],
-            "create_datetime": begin_task_list[i][3],
+            "create_datetime": str(begin_task_list[i][3]),
             "status": begin_task_list[i][4],
-            "planned_completed": begin_task_list[i][5],
+            "planned_completed": str(begin_task_list[i][5]),
         }
         task_list.append(separate_task)
 
@@ -98,14 +102,15 @@ def correct_check_history(history_list):
             "name": history_list[i][0],
             "description": history_list[i][1],
             "status": history_list[i][2],
-            "planned_completed": history_list[i][3],
-            "change_datetime": history_list[i][4],
+            "planned_completed": str(history_list[i][3]),
+            "change_datetime": str(history_list[i][4]),
         }
         history = {
             key: separate_task[key]
             for key in separate_task
             if separate_task[key] != None
         }
+
         task_list.append(history)
 
     finish_result = {"tasks": task_list}

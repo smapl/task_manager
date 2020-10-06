@@ -84,5 +84,5 @@ bash entrypoint.sh
 
 #### Полезные ссылки 
 
-1. (poetry).[https://github.com/python-poetry/poetry]
-2. (pyenv).[https://github.com/pyenv/pyenv]
+1. [poetry](https://github.com/python-poetry/poetry)
+2. [pyenv](https://github.com/pyenv/pyenv)

@@ -10,6 +10,12 @@ from loguru import logger
 from flask import request
 
 
+def avoid_sql_injection(text: str) -> str:
+    clear_text = text.replace("'", "".replace(";", "")).replace("-", "")
+
+    return clear_text
+
+
 def generate_token() -> str:
     now_date = str(datetime.now())
     token = hashlib.sha256(now_date.encode()).hexdigest()

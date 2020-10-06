@@ -33,9 +33,8 @@ class MainHandler(object):
             f"""
                 INSERT INTO {self.table_name_user} 
                 (login, password, authtoken) 
-                VALUES (%(login)s, %(password)s, '{token}');
-            """,
-            {"login": login, "password": password},
+                VALUES ('{login}', '{password}', '{token}');
+            """
         )
 
         self.connection.commit()
@@ -70,14 +69,8 @@ class MainHandler(object):
             f"""
                 INSERT INTO {self.table_name_task} 
                 (name, description, create_datetime, status, planned_completed, user_id) 
-                VALUES (%(name)s, %(description)s,'{create_datetime}',%(status)s, %(planned_completed)s, {user_id});
-            """,
-            {
-                "name": name,
-                "description": description,
-                "status": status,
-                "planned_completed": planned_completed,
-            },
+                VALUES ('{name}', '{description}','{create_datetime}','{status}', '{planned_completed}', {user_id});
+            """
         )
 
         self.connection.commit()
@@ -107,9 +100,8 @@ class MainHandler(object):
                 f"""
                     SELECT id, name, description, create_datetime, status, planned_completed 
                     FROM {self.table_name_task} 
-                    WHERE user_id = {user_id} AND status = %(status_filter)s;
+                    WHERE user_id = {user_id} AND status = '{status_filter}';
                 """,
-                {"status_filter": status_filter},
             )
             user_tasks = self.cursor.fetchall()
 
@@ -225,10 +217,10 @@ class MainHandler(object):
             )
 
             history = self.cursor.fetchall()
-            history_list = correct_check_history(history)
+            history_dict = correct_check_history(history)
 
             self._disconnect()
-            return history_list
+            return history_dict
 
     def _disconnect(self):
         self.connection.close()

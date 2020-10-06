@@ -1,3 +1,5 @@
+import time
+
 import psycopg2
 
 from loguru import logger
@@ -16,10 +18,19 @@ class MainHandler(object):
     def __init__(
         self, postgre_login: str, postgre_password: str, host: str, db_name: str
     ):
+        while True:
+            try:
+                self.connection = psycopg2.connect(
+                    dbname=db_name,
+                    user=postgre_login,
+                    password=postgre_password,
+                    host=host,
+                )
+                break
+            except Exception as ex:
+                logger.error(ex)
+                time.sleep(10)
 
-        self.connection = psycopg2.connect(
-            dbname=db_name, user=postgre_login, password=postgre_password, host=host,
-        )
         self.cursor = self.connection.cursor()
         self.table_name_user = "users_data"
         self.table_name_task = "tasks"

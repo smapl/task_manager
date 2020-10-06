@@ -75,7 +75,8 @@ class CreateUser(Resource):
         hand = MainHandler(postgre_login, postgre_password, host, db_name)
         result = hand.create_user(user_login, user_password)
 
-        return {"authtoken": result}
+        hand._disconnect()
+        return {"response": result}
 
 
 @ns_tasks.route("/create_task")
@@ -104,11 +105,8 @@ class CreateTask(Resource):
             user_token,
         )
 
-        if result == True:
-            return {"respone": 200}
-
-        else:
-            return {"error": result}
+        hand._disconnect()
+        return {"response": result}
 
 
 @ns_tasks.route("/check_tasks_status")
@@ -124,6 +122,8 @@ class CheckTasksStatus(Resource):
         hand = MainHandler(postgre_login, postgre_password, host, db_name)
         result = hand.check_task_status(user_token, status_filter)
         logger.info(result)
+
+        hand._disconnect()
         return {"response": result}
 
 
@@ -141,11 +141,8 @@ class ChangeTaskRows(Resource):
         hand = MainHandler(postgre_login, postgre_password, host, db_name)
         result = hand.change_task_rows(task_id, user_token, new_values)
 
-        if result == True:
-            return {"respone": 200}
-
-        else:
-            return {"error": result}
+        hand._disconnect()
+        return {"response": result}
 
 
 @ns_tasks.route("/check_history_change")
@@ -161,7 +158,5 @@ class CheckTaskHistory(Resource):
         hand = MainHandler(postgre_login, postgre_password, host, db_name)
         result = hand.check_history_change(user_token, task_id)
 
-        if type(result) == dict:
-            return {"tasks": result}
-        else:
-            return {"error": result}
+        hand._disconnect()
+        return {"response": result}

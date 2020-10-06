@@ -63,9 +63,8 @@ def definitions_user_id(authtoken) -> str:
     cursor.execute(
         f"""
                     SELECT id FROM {table_name_user} 
-                    WHERE authtoken = %(authtoken)s;
+                    WHERE authtoken = {authtoken};
                 """,
-        {"authtoken": authtoken},
     )
     user_id = cursor.fetchall()[0][0]
     connection.close()

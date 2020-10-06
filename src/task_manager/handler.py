@@ -42,6 +42,17 @@ class MainHandler(object):
 
     def create_user(self, login: str, password: str) -> str:
         token = generate_token()
+        self.cursor.execute(
+            f"""
+                            SELECT id FROM {self.table_name_user} 
+                            WHERE name = '{login}';
+                            """
+        )
+
+        user_exist = self.cursor.fetchall()[0][0]
+        if user_exist != None:
+            return {"error": "user with the same username already exists"}
+
         try:
             self.cursor.execute(
                 f"""
@@ -100,7 +111,7 @@ class MainHandler(object):
 
         return {"result": "success"}
 
-    def check_task_status(self, user_token: str, status_filter: str) -> dict:
+    def check_task_status(self, user_token: str, status_filter: dict) -> dict:
 
         user_id = definitions_user_id(user_token)
 
@@ -125,11 +136,17 @@ class MainHandler(object):
 
         else:
             try:
+                s_filter = ""
+                for key in status_filter:
+                    s_filter += f"{key}='{status_filter[key]}' AND "
+
+                s_filter = s_filter[:-5]
+
                 self.cursor.execute(
                     f"""
                         SELECT id, name, description, create_datetime, status, planned_completed 
                         FROM {self.table_name_task} 
-                        WHERE user_id = {user_id} AND status = '{status_filter}';
+                        WHERE user_id = {user_id} AND {s_filter};
                     """,
                 )
                 user_tasks = self.cursor.fetchall()

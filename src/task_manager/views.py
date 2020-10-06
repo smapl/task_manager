@@ -29,7 +29,8 @@ def create_user():
     hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.create_user(user_login, user_password)
 
-    return {"authtoken": result}
+    hand._disconnect()
+    return {"response": result}
 
 
 @app.route("/create_task", methods=["POST"])
@@ -55,11 +56,8 @@ def create_task():
         user_token,
     )
 
-    if result == True:
-        return {"respone": 200}
-
-    else:
-        return {"error": result}
+    hand._disconnect()
+    return {"response": result}
 
 
 @app.route("/check_tasks_status", methods=["GET"])
@@ -77,7 +75,8 @@ def check_tasks_status():
     hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.check_task_status(user_token, status_filter)
 
-    return {"respone": result}
+    hand._disconnect()
+    return {"response": result}
 
 
 @app.route("/change_task_rows", methods=["POST"])
@@ -91,11 +90,8 @@ def change_task_rows():
     hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.change_task_rows(task_id, user_token, new_values)
 
-    if result == True:
-        return {"respone": 200}
-
-    else:
-        return {"error": result}
+    hand._disconnect()
+    return {"response": result}
 
 
 @app.route("/check_history_change", methods=["GET"])
@@ -108,7 +104,6 @@ def check_history():
     hand = MainHandler(postgre_login, postgre_password, host, db_name)
     result = hand.check_history_change(user_token, task_id)
 
-    if type(result) == dict:
-        return {"tasks": result}
-    else:
-        return {"error": result}
+    hand._disconnect()
+    return {"response": result}
+
